@@ -1,10 +1,10 @@
-import  React  from 'react';
+import  React, { useState }  from 'react';
 import QueryBar, { QueryBarValue } from '../components/QueryBar';
-import { AppState } from '../store';
 import { Query, QuerySortBy } from '../models/query';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { thunkUpdateUsername } from '../thunks/query';
 import { updateSort } from '../store/query/actions';
+import { getQuery } from '../selectors';
 
 interface  QueryContainerProps {
     query: Query,
@@ -17,54 +17,37 @@ interface QueryContainerState {
     sortBy?: string
 }
 
-class QueryContainer extends React.Component<QueryContainerProps, QueryContainerState> {
+function QueryContainer(    ){
     
-    state: Query = {
-        username:'',
-        sortBy:''     
-    }           
+    const dispatch = useDispatch();
+    
+    const [username, setUsername] = useState('');
+    const [sortBy, setSortBy] = useState('');
 
-    constructor(props: QueryContainerProps) {
-        super(props);
-        this.state.username = props.query.username;
+    const query = useSelector(getQuery);
+
+    const sendQuery = () => {
+        dispatch(thunkUpdateUsername(username));
     }
-
-    updateQuery = ( query: QueryBarValue) => {
-        const mergedstate ={ ...this.state, ...query} as Query;  
-        this.setState(mergedstate);
+    const updateQuery = ( query: QueryBarValue) => {
+        const mergedstate = { username, sortBy, ...query} as Query;  
+        setUsername(query.username || '');
+        setSortBy(query.sortBy || '');
         if( query.hasOwnProperty('sortBy') ){
-            this.props.updateSort(query.sortBy as QuerySortBy);
+            dispatch(updateSort(query.sortBy as QuerySortBy));
         }
     }   
+    return (
+        <React.Fragment>
+            <QueryBar 
+                username= { username }
+                sortBy= { sortBy}
+                updateQuery={ updateQuery}
+                sendQuery={ sendQuery }
+            ></QueryBar>
+        </React.Fragment>
+    )
 
-    sendQuery = () => {
-        this.props.thunkUpdateUsername(this.state.username);
-    }
+}   
 
-    render(){
-
-        return (
-            <React.Fragment>
-                <QueryBar 
-                    username= { this.state.username}
-                    sortBy= { this.state.sortBy}
-                    updateQuery={ this.updateQuery}
-                    sendQuery={ this.sendQuery }
-                ></QueryBar>
-            </React.Fragment>
-        )
-
-
-    }
-}
-
-const mapStateToProps = (state: AppState) => ({
-    query: state.query
-})
-
-export default connect(
-    mapStateToProps,
-    { thunkUpdateUsername, updateSort }
-)(QueryContainer);
-
-
+export default QueryContainer;
