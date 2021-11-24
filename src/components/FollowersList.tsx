@@ -35,7 +35,7 @@ const FollowersList: React.FC<FollowersListProps> = ({list, loadNextPage, hasMor
             </ListItem>
         ) )    
     }
-    const Row= ({ index, style } : ListChildComponentProps) => {
+    const Row= ({ index, style } : ListChildComponentProps ) => {
         const follower = list[index];
 
         if(index >=  list.length){
@@ -43,7 +43,7 @@ const FollowersList: React.FC<FollowersListProps> = ({list, loadNextPage, hasMor
         }
        
             return (
-                    <ListItem style={style} >
+                    <ListItem style={style as React.CSSProperties} >
                         {
                             index < list.length ?
                             <FollowerItem follower={follower} key={follower.id_str} ></FollowerItem> :
