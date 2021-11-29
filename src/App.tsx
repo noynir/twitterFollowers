@@ -1,8 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { AppState } from './store';
-import { connect } from 'react-redux';
 import QueryContainer from './containers/QueryContainer';
 import FollowersContainer from './containers/FollowersContainer';
 import styled from 'styled-components';
