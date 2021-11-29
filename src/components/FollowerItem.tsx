@@ -3,7 +3,7 @@ import { TwitterUser } from '../models/TwitterUser';
 import styled from 'styled-components';
 
 interface FollowerItemProps {
-    follower: TwitterUser;
+    follower: Partial<TwitterUser>;
 }
 
 const Wrap = styled.div`
